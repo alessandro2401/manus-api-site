@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manus GPT API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #28a745;
+            color: white;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .api-url {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .api-url code {
+            font-size: 1.1em;
+            color: #333;
+            word-break: break-all;
+        }
+        
+        .endpoint {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+        
+        .post { background: #28a745; color: white; }
+        .get { background: #007bff; color: white; }
+        .delete { background: #dc3545; color: white; }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .test-section {
+            background: #e3f2fd;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .test-section h3 {
+            color: #1976d2;
+            margin-bottom: 20px;
+        }
+        
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            font-family: inherit;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .response {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #ddd;
+            min-height: 100px;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+        }
+        
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Manus GPT API</h1>
+            <p>API REST para integração com modelos GPT</p>
+            <span class="status">✅ Online</span>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>🌐 URL da API</h2>
+                <div class="api-url">
+                    <code id="apiUrl">https://5000-iig02c9vvuajifsavjufh-86bd69da.manusvm.computer</code>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📚 Endpoints Disponíveis</h2>
+                
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <strong>/api/health</strong>
+                    <p style="margin-top: 10px; color: #666;">Verifica o status da API</p>
+                </div>
+                
+                <div class="endpoint">
+                    <span class="method post">POST</span>
+                    <strong>/api/chat</strong>
+                    <p style="margin-top: 10px; color: #666;">Envia mensagem e recebe resposta do GPT</p>
+                    <div class="code-block">{ "message": "Sua pergunta aqui" }</div>
+                </div>
+                
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <strong>/api/conversations</strong>
+                    <p style="margin-top: 10px; color: #666;">Lista todas as conversas ativas</p>
+                </div>
+                
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <strong>/api/conversation/:id</strong>
+                    <p style="margin-top: 10px; color: #666;">Recupera histórico de uma conversa específica</p>
+                </div>
+                
+                <div class="endpoint">
+                    <span class="method delete">DELETE</span>
+                    <strong>/api/conversation/:id</strong>
+                    <p style="margin-top: 10px; color: #666;">Deleta uma conversa</p>
+                </div>
+                
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <strong>/api/models</strong>
+                    <p style="margin-top: 10px; color: #666;">Lista modelos disponíveis</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>💡 Exemplo de Uso</h2>
+                <div class="code-block">curl -X POST https://5000-iig02c9vvuajifsavjufh-86bd69da.manusvm.computer/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Olá! Como você está?"}'</div>
+            </div>
+            
+            <div class="test-section">
+                <h3>🧪 Testar API Agora</h3>
+                <label for="testMessage"><strong>Sua mensagem:</strong></label>
+                <textarea id="testMessage" placeholder="Digite sua mensagem aqui...">Olá! Como você está?</textarea>
+                
+                <label for="conversationId"><strong>ID da Conversa (opcional):</strong></label>
+                <input type="text" id="conversationId" placeholder="Deixe vazio para nova conversa">
+                
+                <button onclick="testAPI()" id="testBtn">Enviar Mensagem</button>
+                
+                <div id="response" class="response" style="display:none;"></div>
+            </div>
+            
+            <div class="section">
+                <h2>📦 Repositórios GitHub</h2>
+                <p><strong>API Completa:</strong> <a href="https://github.com/alessandro2401/manus-gpt-api" target="_blank">alessandro2401/manus-gpt-api</a></p>
+                <p><strong>Deploy Simplificado:</strong> <a href="https://github.com/alessandro2401/manus-api-deploy" target="_blank">alessandro2401/manus-api-deploy</a></p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Desenvolvido com ❤️ para o Manus</p>
+            <p>© 2025 Manus GPT API</p>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'https://5000-iig02c9vvuajifsavjufh-86bd69da.manusvm.computer';
+        
+        async function testAPI() {
+            const message = document.getElementById('testMessage').value;
+            const conversationId = document.getElementById('conversationId').value;
+            const responseDiv = document.getElementById('response');
+            const testBtn = document.getElementById('testBtn');
+            
+            if (!message.trim()) {
+                alert('Por favor, digite uma mensagem!');
+                return;
+            }
+            
+            responseDiv.style.display = 'block';
+            responseDiv.innerHTML = '<p class="loading">⏳ Enviando mensagem...</p>';
+            testBtn.disabled = true;
+            
+            try {
+                const payload = { message };
+                if (conversationId.trim()) {
+                    payload.conversation_id = conversationId.trim();
+                }
+                
+                const response = await fetch(`${API_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.innerHTML = `
+                        <p class="success"><strong>✅ Resposta recebida!</strong></p>
+                        <p style="margin-top: 15px;"><strong>GPT:</strong></p>
+                        <p style="margin-top: 10px; line-height: 1.6;">${data.response}</p>
+                        <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+                        <p style="color: #666; font-size: 0.9em;">
+                            <strong>Modelo:</strong> ${data.model}<br>
+                            <strong>Tokens:</strong> ${data.usage.total_tokens}<br>
+                            ${data.conversation_id ? `<strong>ID da Conversa:</strong> ${data.conversation_id}` : ''}
+                        </p>
+                    `;
+                } else {
+                    responseDiv.innerHTML = `<p class="error">❌ Erro: ${data.error}</p>`;
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<p class="error">❌ Erro de conexão: ${error.message}</p>`;
+            } finally {
+                testBtn.disabled = false;
+            }
+        }
+        
+        // Permitir enviar com Enter (Ctrl+Enter no textarea)
+        document.getElementById('testMessage').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                testAPI();
+            }
+        });
+    </script>
+</body>
+</html>
+
